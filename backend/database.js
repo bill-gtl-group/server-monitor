@@ -41,6 +41,7 @@ function initDatabase() {
             ssl_valid BOOLEAN,
             ssl_expires_at INTEGER,
             ssl_days_remaining INTEGER,
+            ssl_issuer TEXT,
             status_code INTEGER,
             error_message TEXT,
             consecutive_failures INTEGER DEFAULT 0
@@ -51,6 +52,14 @@ function initDatabase() {
         CREATE INDEX IF NOT EXISTS idx_checks_server ON server_checks(server_url);
         CREATE INDEX IF NOT EXISTS idx_checks_time ON server_checks(checked_at);
     `);
+
+    // Migration: Add ssl_issuer column if it doesn't exist (for existing databases)
+    try {
+        db.exec(`ALTER TABLE server_checks ADD COLUMN ssl_issuer TEXT`);
+        console.log('✅ Migration: Added ssl_issuer column');
+    } catch (e) {
+        // Column already exists, ignore error
+    }
 
     console.log('✅ Database tables created/verified');
 }
@@ -149,8 +158,8 @@ function recordServerCheck(checkData) {
         INSERT INTO server_checks (
             server_name, server_url, checked_at, is_online, 
             response_time, ssl_valid, ssl_expires_at, ssl_days_remaining,
-            status_code, error_message
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ssl_issuer, status_code, error_message
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
     return stmt.run(
@@ -162,6 +171,7 @@ function recordServerCheck(checkData) {
         checkData.ssl_valid === null ? null : (checkData.ssl_valid ? 1 : 0),  // Convert boolean to integer
         checkData.ssl_expires_at,
         checkData.ssl_days_remaining,
+        checkData.ssl_issuer || null,  // SSL certificate issuer (e.g., Let's Encrypt, Sectigo)
         checkData.status_code,
         checkData.error_message
     );

@@ -1,4 +1,5 @@
 let serverData = [];
+let currentSort = { column: 'ssl_days_remaining', direction: 'asc' }; // Default: expired first
 
 // Load server status
 async function loadServers() {
@@ -31,6 +32,57 @@ function groupByCustomer(servers) {
     return groups;
 }
 
+// Sort servers by column
+function sortServers(servers, column, direction) {
+    return [...servers].sort((a, b) => {
+        let valA = a[column];
+        let valB = b[column];
+        
+        // Handle null/undefined values - push them to the end
+        if (valA === null || valA === undefined) valA = direction === 'asc' ? Infinity : -Infinity;
+        if (valB === null || valB === undefined) valB = direction === 'asc' ? Infinity : -Infinity;
+        
+        // Special handling for ssl_days_remaining - treat expired (negative) as highest priority
+        if (column === 'ssl_days_remaining') {
+            // For ascending: expired (negative) < soon < later < no SSL (Infinity)
+            // This naturally works with numeric sort
+        }
+        
+        // Numeric comparison
+        if (typeof valA === 'number' && typeof valB === 'number') {
+            return direction === 'asc' ? valA - valB : valB - valA;
+        }
+        
+        // String comparison
+        const strA = String(valA).toLowerCase();
+        const strB = String(valB).toLowerCase();
+        if (direction === 'asc') {
+            return strA.localeCompare(strB);
+        } else {
+            return strB.localeCompare(strA);
+        }
+    });
+}
+
+// Handle column header click for sorting
+function handleSort(column) {
+    if (currentSort.column === column) {
+        // Toggle direction
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSort.column = column;
+        // Default direction based on column type
+        currentSort.direction = (column === 'ssl_days_remaining' || column === 'response_time') ? 'asc' : 'asc';
+    }
+    displayServersTable(serverData);
+}
+
+// Get sort indicator
+function getSortIndicator(column) {
+    if (currentSort.column !== column) return '';
+    return currentSort.direction === 'asc' ? ' ▲' : ' ▼';
+}
+
 // Display servers in Excel-like table format
 function displayServersTable(servers) {
     const container = document.getElementById('serversTable');
@@ -40,21 +92,24 @@ function displayServersTable(servers) {
         return;
     }
     
-    const customerGroups = groupByCustomer(servers);
+    // Sort all servers first
+    const sortedServers = sortServers(servers, currentSort.column, currentSort.direction);
+    const customerGroups = groupByCustomer(sortedServers);
     
     let tableHTML = '<table class="servers-table">';
     
-    // Table header
+    // Table header with sortable columns
     tableHTML += `
         <thead>
             <tr>
-                <th>Server Name</th>
+                <th class="sortable" onclick="handleSort('server_name')">Server Name${getSortIndicator('server_name')}</th>
                 <th>URL</th>
-                <th>Status</th>
-                <th>Response</th>
-                <th>SSL OK</th>
+                <th class="sortable" onclick="handleSort('is_online')">Status${getSortIndicator('is_online')}</th>
+                <th class="sortable" onclick="handleSort('response_time')">Response${getSortIndicator('response_time')}</th>
+                <th class="sortable" onclick="handleSort('ssl_valid')">SSL OK${getSortIndicator('ssl_valid')}</th>
+                <th class="sortable" onclick="handleSort('ssl_issuer')">SSL Issuer${getSortIndicator('ssl_issuer')}</th>
                 <th>SSL Expires</th>
-                <th>Days Left</th>
+                <th class="sortable ssl-days-header" onclick="handleSort('ssl_days_remaining')">Days Left${getSortIndicator('ssl_days_remaining')}</th>
                 <th>Last Checked</th>
                 <th>Action</th>
             </tr>
@@ -64,10 +119,13 @@ function displayServersTable(servers) {
     
     // Generate rows for each customer group
     for (const [customer, customerServers] of Object.entries(customerGroups)) {
+        // Sort customer servers
+        const sortedCustomerServers = sortServers(customerServers, currentSort.column, currentSort.direction);
+        
         // Customer group header
         tableHTML += `
             <tr class="customer-group-header">
-                <td colspan="9">
+                <td colspan="10">
                     <div class="customer-name">
                         <span>
                             <strong>${escapeHtml(customer)}</strong>
@@ -82,7 +140,7 @@ function displayServersTable(servers) {
         `;
         
         // Server rows
-        customerServers.forEach(server => {
+        sortedCustomerServers.forEach(server => {
             const statusClass = server.is_online ? 
                 (server.ssl_days_remaining !== null && server.ssl_days_remaining <= 30 ? 'warning' : 'online') : 
                 'offline';
@@ -93,6 +151,31 @@ function displayServersTable(servers) {
             
             const sslValid = server.ssl_valid === 1 ? 'Yes' : server.ssl_valid === 0 ? 'No' : 'N/A';
             const sslClass = server.ssl_valid === 1 ? 'ssl-yes' : server.ssl_valid === 0 ? 'ssl-no' : '';
+            
+            // SSL days remaining with color coding
+            let daysLeftClass = '';
+            let daysLeftText = 'N/A';
+            if (server.ssl_days_remaining !== null) {
+                if (server.ssl_days_remaining < 0) {
+                    daysLeftClass = 'ssl-expired';
+                    daysLeftText = `EXPIRED (${Math.abs(server.ssl_days_remaining)} days ago)`;
+                } else if (server.ssl_days_remaining <= 7) {
+                    daysLeftClass = 'ssl-critical';
+                    daysLeftText = `${server.ssl_days_remaining} days`;
+                } else if (server.ssl_days_remaining <= 30) {
+                    daysLeftClass = 'ssl-warning';
+                    daysLeftText = `${server.ssl_days_remaining} days`;
+                } else if (server.ssl_days_remaining <= 90) {
+                    daysLeftClass = 'ssl-medium';
+                    daysLeftText = `${server.ssl_days_remaining} days`;
+                } else {
+                    daysLeftClass = 'ssl-good';
+                    daysLeftText = `${server.ssl_days_remaining} days`;
+                }
+            }
+            
+            // SSL issuer display
+            const sslIssuer = server.ssl_issuer || 'N/A';
             
             tableHTML += `
                 <tr data-server-url="${escapeHtml(server.server_url)}">
@@ -108,8 +191,9 @@ function displayServersTable(servers) {
                     </td>
                     <td class="response-time-cell">${server.response_time ? server.response_time + ' ms' : 'N/A'}</td>
                     <td class="ssl-cell ${sslClass}">${sslValid}</td>
+                    <td class="ssl-issuer-cell">${escapeHtml(sslIssuer)}</td>
                     <td class="date-cell">${server.ssl_expires_at ? new Date(server.ssl_expires_at).toLocaleDateString() : 'N/A'}</td>
-                    <td class="date-cell">${server.ssl_days_remaining !== null ? server.ssl_days_remaining + ' days' : 'N/A'}</td>
+                    <td class="date-cell ${daysLeftClass}">${daysLeftText}</td>
                     <td class="date-cell">${new Date(server.checked_at).toLocaleString()}</td>
                     <td class="action-cell">
                         <button class="btn-test-small" onclick="testServer('${escapeHtml(server.server_url)}', this)">
@@ -178,11 +262,14 @@ function updateStats(servers) {
     const sslWarnings = servers.filter(s => 
         s.ssl_days_remaining !== null && s.ssl_days_remaining <= 30 && s.ssl_days_remaining > 0
     ).length;
+    const sslExpired = servers.filter(s => 
+        s.ssl_days_remaining !== null && s.ssl_days_remaining < 0
+    ).length;
     
     document.getElementById('totalServers').textContent = total;
     document.getElementById('onlineServers').textContent = online;
     document.getElementById('offlineServers').textContent = offline;
-    document.getElementById('sslWarnings').textContent = sslWarnings;
+    document.getElementById('sslWarnings').textContent = sslWarnings + (sslExpired > 0 ? ` (${sslExpired} expired)` : '');
 }
 
 // Test individual server

@@ -17,6 +17,7 @@ async function checkServer(server) {
         ssl_valid: null,
         ssl_expires_at: null,
         ssl_days_remaining: null,
+        ssl_issuer: null,
         status_code: null,
         error_message: null
     };
@@ -57,6 +58,7 @@ async function checkServer(server) {
             result.ssl_valid = sslInfo.valid;
             result.ssl_expires_at = sslInfo.expires_at;
             result.ssl_days_remaining = sslInfo.days_remaining;
+            result.ssl_issuer = sslInfo.issuer;
             
             // SSL issues (expired, revoked, invalid) are tracked and trigger alerts
             // but do NOT mark the server as offline - only connection failures do that
@@ -79,6 +81,7 @@ async function checkServer(server) {
                 result.ssl_valid = sslInfo.valid;
                 result.ssl_expires_at = sslInfo.expires_at;
                 result.ssl_days_remaining = sslInfo.days_remaining;
+                result.ssl_issuer = sslInfo.issuer;
                 
                 // If we can check SSL, the server is responding (just has SSL issues)
                 // Mark as online with SSL warning
@@ -119,6 +122,7 @@ async function checkServer(server) {
                     result.ssl_valid = sslInfo.valid;
                     result.ssl_expires_at = sslInfo.expires_at;
                     result.ssl_days_remaining = sslInfo.days_remaining;
+                    result.ssl_issuer = sslInfo.issuer;
                 } catch (sslError) {
                     result.ssl_valid = false;
                     result.error_message += ` | SSL: ${sslError.message}`;
@@ -161,11 +165,15 @@ function checkSSLCertificate(url) {
                 const now = new Date();
                 const daysRemaining = Math.floor((expiryDate - now) / (1000 * 60 * 60 * 24));
                 
+                // Extract issuer organization name
+                const issuerOrg = cert.issuer?.O || cert.issuer?.CN || 'Unknown';
+                
                 const result = {
                     valid: daysRemaining > 0,
                     expires_at: expiryDate.getTime(),
                     days_remaining: daysRemaining,
-                    issuer: cert.issuer,
+                    issuer: issuerOrg,
+                    issuer_full: cert.issuer,
                     subject: cert.subject
                 };
 

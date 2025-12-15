@@ -1,6 +1,6 @@
 {
   "name": "server-health-monitor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Web Server Health Monitor with SSL Checks and Email Alerts",
   "main": "server.js",
   "scripts": {
