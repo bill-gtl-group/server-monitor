@@ -1,0 +1,15 @@
+{
+  "smtp": {
+    "host": "mail.example.com",
+    "port": 25,
+    "secure": false,
+    "from": "monitor@example.com",
+    "fromName": "Server Health Monitor",
+    "to": ""
+  },
+  "api": {
+    "port": 3000,
+    "corsOrigin": "*",
+    "baseUrl": "http://localhost:3000"
+  }
+}

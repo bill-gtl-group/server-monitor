@@ -1,0 +1,38 @@
+{
+  "name": "server-health-monitor",
+  "version": "1.0.0",
+  "description": "Web Server Health Monitor with SSL Checks and Email Alerts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "monitoring",
+    "health-check",
+    "ssl",
+    "alerts"
+  ],
+  "author": "Bill Wong",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "better-sqlite3": "^9.2.2",
+    "csv-parse": "^5.5.3",
+    "uuid": "^9.0.1",
+    "multer": "^1.4.5-lts.1",
+    "express-session": "^1.17.3",
+    "bcrypt": "^5.1.1",
+    "tls": "^0.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

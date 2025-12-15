@@ -1,0 +1,11 @@
+name,url,check_interval,ssl_alert_days,alert_email,enabled
+Production API,https://api.example.com,300,30,devops@example.com,true
+Main Website,https://www.example.com,300,30,webmaster@example.com,true
+Admin Portal,https://admin.example.com,300,30,admin@example.com,true
+Staging Server,https://staging.example.com,600,30,dev-team@example.com,true
+Database API,https://db-api.example.com,300,15,dba@example.com,true
+Payment Gateway,https://payments.example.com,180,30,finance@example.com,true
+CDN Endpoint,https://cdn.example.com,600,30,ops@example.com,true
+Mobile API,https://mobile-api.example.com,300,30,mobile-team@example.com,true
+Legacy System,https://old.example.com,900,30,legacy-support@example.com,false
+Test Server,https://test.example.com,1800,30,qa@example.com,false

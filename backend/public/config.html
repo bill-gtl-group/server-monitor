@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - Server Health Monitor</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">📊 Server Health Monitor</div>
+        <div class="nav-menu">
+            <a href="/dashboard.html" class="nav-link">Dashboard</a>
+            <a href="/alerts.html" class="nav-link">Alerts</a>
+            <a href="/config.html" class="nav-link active">Configuration</a>
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Configuration</h1>
+
+        <!-- SMTP Configuration -->
+        <div class="config-section">
+            <h2>SMTP Settings</h2>
+            <form id="smtpForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smtpHost">SMTP Host</label>
+                        <input type="text" id="smtpHost" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpPort">Port</label>
+                        <input type="number" id="smtpPort" value="25" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smtpFrom">From Email</label>
+                        <input type="email" id="smtpFrom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpFromName">From Name</label>
+                        <input type="text" id="smtpFromName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="smtpTo">Additional Recipient (CC)</label>
+                    <input type="email" id="smtpTo">
+                </div>
+                <div id="smtpMessage" style="display: none;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">Save SMTP Settings</button>
+                    <button type="button" id="testSmtpBtn" class="btn btn-secondary">Test Connection</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- API Configuration -->
+        <div class="config-section">
+            <h2>API Settings</h2>
+            <form id="apiForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apiPort">API Port</label>
+                        <input type="number" id="apiPort" value="3000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apiBaseUrl">Base URL</label>
+                        <input type="text" id="apiBaseUrl" placeholder="https://monitor.yourcompany.com" required>
+                    </div>
+                </div>
+                <div id="apiMessage" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary">Save API Settings</button>
+            </form>
+        </div>
+
+        <!-- Server Management -->
+        <div class="config-section">
+            <h2>Server List Management</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="downloadServersBtn" class="btn btn-primary">📥 Download servers.csv</button>
+                <button id="downloadTemplateBtn" class="btn btn-secondary">📄 Download Template</button>
+                <div>
+                    <label for="uploadServers" class="btn btn-success" style="margin: 0; cursor: pointer;">
+                       📤 Upload servers.csv
+                    </label>
+                    <input type="file" id="uploadServers" accept=".csv" style="display: none;">
+                </div>
+            </div>
+            <div id="uploadMessage" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/config.js"></script>
+</body>
+</html>

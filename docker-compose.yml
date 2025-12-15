@@ -1,0 +1,19 @@
+services:
+  monitor-backend:
+    build: .
+    container_name: server-monitor
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      - CHECK_INTERVAL=300000
+      - PORT=3000
+    restart: unless-stopped
+    networks:
+      - monitor-network
+
+networks:
+  monitor-network:
+    driver: bridge

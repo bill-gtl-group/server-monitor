@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Server Health Monitor</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">📊 Server Health Monitor</div>
+        <div class="nav-menu">
+            <a href="/dashboard.html" class="nav-link active">Dashboard</a>
+            <a href="/alerts.html" class="nav-link">Alerts</a>
+            <a href="/config.html" class="nav-link">Configuration</a>
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Server Status Dashboard</h1>
+            <button id="refreshBtn" class="btn btn-primary">🔄 Refresh All</button>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalServers">-</div>
+                <div class="stat-label">Total Servers</div>
+            </div>
+            <div class="stat-card stat-success">
+                <div class="stat-value" id="onlineServers">-</div>
+                <div class="stat-label">Online</div>
+            </div>
+            <div class="stat-card stat-danger">
+                <div class="stat-value" id="offlineServers">-</div>
+                <div class="stat-label">Offline</div>
+            </div>
+            <div class="stat-card stat-warning">
+                <div class="stat-value" id="sslWarnings">-</div>
+                <div class="stat-label">SSL Warnings</div>
+            </div>
+        </div>
+
+        <div class="servers-section">
+            <h2>Servers</h2>
+            <div id="serversTable" class="servers-table-container">
+                <div class="loading">Loading servers...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

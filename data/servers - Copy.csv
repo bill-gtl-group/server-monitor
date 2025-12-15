@@ -1,0 +1,35 @@
+name,url,check_interval,ssl_alert_days,alert_email,customer,failure_threshold,enabled
+WWW,https://www.gtl-group.com,300,30,bill@gtl.com.hk,Easynet,3,TRUE
+Email,http://webmail.easynet.hk,300,30,bill@gtl.com.hk,Easynet,3,TRUE
+GT MUS REIT,https://www.gtmusreit.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+GT MUS REIT Dataroom,https://www.gtmusreit-dataroom.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Grandtag Online,https://www.grandtagol.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+GT APML,https://www.gtapml.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+GT IBL,https://www.gtibl.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+eFlow Login,https://eflow.grandtag.com/login,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+GT IBL Portal,https://gtibl.grandtag.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Mailer API,https://mailer.grandtag.com/web/api/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Grandtag Main,https://www.grandtag.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Grandtag User Login,https://grandtag.com/?q=user/login,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Insurenet,http://grandtag.gogoins.com/insurenet/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+BOA Grandtag,https://boa.grandtag.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+GT APML Backend,https://www.gtapml.com/backend/insight/index?page=2,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Grandtag EN Login,https://grandtag.com/en/user/login?destination=user,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+GT IBL Admin,https://gtibl.com/wp-login.php?redirect_to=https%3A%2F%2Fgtibl.com%2Fwp-admin%2F&reauth=1,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+BOA GTIBL,https://boa.gtibl.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Quotes Portal,https://quotes.grandtag.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Signup Portal,https://signup.grandtag.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Fintech Portal,https://fintech.grandtag.com/,300,30,bill@gtl.com.hk,Grandtag,3,TRUE
+Lawsoc Main,https://www.hklawsoc.org.hk,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+Lawsoc Directory,https://lawdirectory.hklawsoc.org.hk,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+WebMail,https://member.hklawsoc.org.hk,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+ECM,https://www.meeting.hklawsoc.org.hk,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+Choose HK Lawyer,http://www.choosehklawyer.org,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+Lawsoc CMS Login,http://cms.hklawsoc.org.hk/sitecore/login,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+Lawsoc CMS Testing,http://cms-testing.hklawsoc.org.hk/,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+HK Law Academy,https://hklawacademy.org,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+hklaw Calebder,https://www.hklawacademy.org/course.php?courseType=cpd,300,30,bill@gtl.com.hk,Lawsoc,3,TRUE
+SSL Test Staging,https://test-ev-rsa.ssl.com,600,30,bill@gtl.com.hk,SSL Test,2,TRUE
+SSL Test Expired,https://expired-rsa-dv.ssl.com,300,15,bill@gtl.com.hk,SSL Test,2,TRUE
+SSL Test Revoked,https://revoked-rsa-dv.ssl.com,180,30,bill@gtl.com.hk,SSL Test,2,TRUE
+Admin Portal Test,https://www.ssss.xxx,300,30,billwong169@gmail.com,Test,2,FALSE
